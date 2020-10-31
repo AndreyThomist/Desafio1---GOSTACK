@@ -49,7 +49,7 @@ app.delete("/repositories/:id", (request, response) => {
     const {id} = request.params;
     const findIndex = repositories.findIndex(repository => repository.id === id);
     repositories.splice(findIndex,1);
-    return response.json({
+    return response.status(204).json({
     message:"deleted with success"
     })
 });
