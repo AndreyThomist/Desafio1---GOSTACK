@@ -6,18 +6,21 @@ app.use(express.json());
 app.use(cors());
 
 const repositories = [
-    
+
 ];
-app.use('/repositories/:id',(request,response,next) => {
-   const {id} = request.params;
-   if(!isUuid(id)){
-      return response.status(400).json({
-      message:'id not valid'
-    })
-   }
-   return next();
-   
-})
+
+const validateId = (request,response,next) => {
+  const {id} = request.params;
+  if(!isUuid(id)){
+     return response.status(400).json({
+     message:'id not valid'
+   })
+  }
+  return next();
+  
+}
+
+app.use('/repositories/:id',validateId)
 app.get("/repositories", (request, response) => {
     return response.json(repositories);
 });
@@ -50,7 +53,7 @@ app.delete("/repositories/:id", (request, response) => {
     message:"deleted with success"
     })
 });
-app.post("/repositories/:id/like", (request, response) => {
+app.post("/repositories/:id/like",validateId, (request, response) => {
     const {id} = request.params;
     const findIndex = repositories.findIndex(repository => repository.id === id);
     repositories[findIndex].likes = repositories[findIndex].likes + 1;
